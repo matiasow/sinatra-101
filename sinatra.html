@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<!--
+    Google HTML5 slide template
+
+    Authors: Luke Mahé (code)
+    Marcin Wichary (code and design)
+
+    Dominic Mazzoni (browser compatibility)
+    Charles Chen (ChromeVox support)
+
+    URL: http://code.google.com/p/html5slides/
+  -->
+
+<html>
+  <head>
+    <title>The Other Way: A Sinatra tutorial</title>
+
+    <meta charset='utf-8'>
+
+    <style type="text/css">
+
+      article.biglogo{ background:#fff url(img/legend.gif) right bottom no-repeat !important; }
+      body#rubyslides{
+      background: #c5423d;
+      /* background: -o-radial-gradient(#F0534E, #E70000);
+      background: -moz-radial-gradient(#F0534E, #E70000);
+      background: -webkit-radial-gradient(#F0534E, #E70000);
+      background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(#F0938E), to(#E70000)); */
+
+      background-image: url(img/fist.png);
+      background-position:bottom right;
+      background-repeat:no-repeat;
+      }
+
+      pre.big{ font-size:30px; line-height:38px; }
+
+
+      .slides.template-default > article:not(.nobackground):not(.biglogo) { background:#fff url(img/legend.gif) right bottom no-repeat !important; }
+
+    </style>
+
+    <script src="slides.js"></script>
+  </head>
+
+
+  <body style='display: none' id="rubyslides">
+
+    <section class='slides layout-regular template-default'>
+
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+
+
+
+      <article>
+        <h1>
+          The <i>Other</i> Way:
+          <br>
+          A Sinatra tutorial
+        </h1>
+        <p>
+          Matias Owsianik
+          <br>
+          Ruby Fun Day - October 2012
+        </p>
+      </article>
+
+      <article>
+        <h2>And someday came Chris Neukirchen...</h2>
+      </article>
+      
+      <article>
+        <h3>Rack</h3>
+        <p>A common web server interface</p>
+        <ul class="build">
+          <li>Minimal</li>
+          <li>Modular</li>
+          <li>Adaptable</li>
+        <ul>
+      </article>
+
+      <article>
+        <h3>How Rack works?</h3>
+
+        <pre>
+class HelloWorld
+  def call(env)
+    [200, {"Content-Type" => "text/plain"}, ["Hello world!"]]
+      # Status, header, body...
+  end
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Rack Middlewares</h3>
+        <ul>
+          <li>Rack::Cache</li>
+          <li>Rack::Debug</li>
+          <li>Rack::OpenID</li>
+          <li>and many more...</li>
+        </ul>
+        <p>
+          ... check out <a href="https://github.com/rack/rack/wiki/List-of-Middleware">Rack Wiki</a>!
+        </p>
+
+      </article>
+
+      <article>
+        <h3>Hello Frank</h3>
+        <pre>
+require 'sinatra'
+get '/' do 
+  "Hello, world!"
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Let's swing!</h3>
+        <pre>
+require 'sinatra'
+
+get '/' do
+  "GET request received"
+end
+
+post '/' do
+  "POST request received"
+end
+
+put '/' do
+  "PUT request received"
+end
+
+delete '/' do
+  "DELETE request received"
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Swing the verbs</h3>
+        <ul>
+          <li>GET</li>
+          <li>POST</li>
+          <li>PUT</li>
+          <li>DELETE</li>
+          <li>PATCH</li>
+          <li>OPTIONS</li>
+      </article>
+
+      <article>
+        <h3>Handle parameters</h3>
+        <pre>
+get '/hello/:name' do
+  "Hello #{params[:name]}"
+end
+
+post '/hello' do
+  "Hello #{params[:name]}"
+end
+
+get '/hello/*' do
+  "Hello #{params[:splat]}"
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Dance along</h3>
+        <p>pass</p>
+        <p>redirect</p>
+      </article>
+
+      <article>
+        <h3>Turn on the mike</h3>
+        <pre>
+before do
+end
+
+after do
+end
+
+before('/index'){ ... }
+        </pre>
+      </article>
+
+      <article>
+        <h3>And.. stop!</h3>
+        <pre>
+halt 500
+        </pre>
+      </article>
+
+      <article>
+        <h3>Stumble with style</h3>
+        <pre>
+configure do
+  set :show_exceptions, false
+end
+
+not_found do
+  "Mmmm... nothing here."
+end
+
+error do
+  "Houston, we have a problem..."
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Mind the head</h3>
+        <pre>
+get '/' do
+  headers "X-Custom-Value" => "Some header data..."
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Listen and sing</h3>
+        <pre>
+request.env["HTTP_HOST"]
+
+response.body
+        </pre>
+      </article>
+
+      <article>
+        <h3>A swing session</h3>
+        <pre>
+configure do
+  enable :sessions
+end
+
+before do
+  @last_request = session[:last_request]
+end
+
+after do
+  session[:last_request] = Time.now
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Eat some cookies</h3>
+        <pre>
+response.set_cookie "name", "value"
+
+the_value = request.cookies["name"]
+        </pre>
+      </article>
+
+      <article>
+        <h2>Views: Jazz your look</h2>
+      </article>
+
+      <article>
+        <h3>Internal views</h3>
+        <pre>
+__END__
+@@index
+&lt;html&gt;
+  &lt;body&gt;
+    ...
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <h3>or external</h3>
+        <p>/views</p>
+      </article>
+
+      <article>
+        <h3>Templates engines</h3>
+        <ul>
+          <li>erb</li>
+          <li>erubis</li>
+          <li>haml</li>
+          <li>slim</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Layouts</h3>
+        <p>/views/layout.erb</p>
+        <pre>
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;%= yield %&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+      </article>
+
+      <article>
+        <h3>Static files</h3>
+        <p>javascript, css, images, etc...</p>
+        <pre>/public</pre>
+      </article>
+
+      <article>
+        <h3>Get some help</h3>
+        <pre>
+helpers do
+  def url_for(name)
+    case name
+    when :index then '/index'
+    when :cart then  '/cart'
+    else "/page/#{name}"
+  end 
+end
+
+url_for :index # => '/index'
+url_for :products  # => '/page/products'
+        </pre>
+      </article>
+
+      <article>
+        <h3>Extending Sinatra</h3>
+        <pre>
+module Sinatra 
+  module PostGet
+    def post_get(route, &block)
+      get(route, &block)
+      post(route, &block)
+    end 
+  end
+  register PostGet 
+end
+
+post_get '/' do
+  "Hello #{params[:name]}!"
+end
+        </pre>
+      </article>
+
+      <article>
+        <h2>Models: Soul of your swing</h2>
+      </article>
+
+      <article>
+        <h3>Pick your weapon of choice</h3>
+        <ul>
+          <li>ActiveRecord</li>
+          <li>DataMapper</li>
+          <li>Sequel</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Install DataMapper</h3>
+        <pre>
+gem install dm-sqlite-adapter
+gem install dm-mysql-adapter
+gem install dm-postgres-adapter
+gem install dm-oracle-adapter
+gem install dm-sqlserver-adapter</pre>
+        <pre>
+gem install data_mapper</pre>
+      </article>
+
+      <article>
+        <h3>Configure</h3>
+        <pre>
+DataMapper.setup :default, 'sqlite:///path/to/database.db'</pre>
+      </article>
+
+      <article>
+        <h3>Define a model</h3>
+        <pre>
+class Event
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :name, String
+  property :event_date, Date
+  property :created_at, DateTime
+end</pre>
+      </article>
+
+      <article>
+        <h3>Associations</h3>
+        <pre>
+class Event
+  has n, :attendants
+end
+
+class Attendant
+  belongs_to :event
+end</pre>
+      </article>
+
+      <article>
+        <h3>Round out</h3>
+        <pre>DataMapper.finalize</pre>
+      </article>
+
+      <article>
+        <h3>Migrations</h3>
+        <pre>require 'dm-migrations'</pre>
+        <pre>DataMapper.auto_migrate!</pre>
+        <pre>DataMapper.auto_upgrade!</pre>
+      </article>
+
+      <article>
+        <h3>Use your model</h3>
+        <pre>
+@event = Event.new(:name => 'Ruby Fun Day', :event_date => Date.today)
+@event.save</pre>
+      </article>
+
+      <article>
+        <h3>Perform lookups</h3>
+        <pre>
+Event.get(1) # Lookup by id
+Event.first(:name => 'Ruby Fun Day') # First element match
+Event.last # Last element
+Event.all
+Event.all(:date => Date.today)
+        </pre>
+      </article>
+
+      <article>
+        <h3>Define scopes elegantly</h3>
+        <pre>
+class Event
+  def self.happening_today
+    all(:date => Date.today)
+  end
+
+  def self.future
+    all(:date.gt => Date.today, :order => [ :date.asc ])
+  end
+end
+        </pre>
+      </article>
+
+      <article>
+        <h3>Search</h3>
+        <ul>
+          <li>gt</li>
+          <li>lt</li>
+          <li>gte</li>
+          <li>lte</li>
+          <li>not</li>
+          <li>eql</li>
+          <li>like</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Validations</h3>
+        <pre>
+property :name, String, :required => true
+property :email, String, :format => :email_address
+        </pre>
+      </article>
+
+      <article>
+        <h3>Manual validations</h3>
+        <pre>
+validates_absence_of
+validates_acceptance_of
+validates_with_block
+validates_confirmation_of
+validates_format_of
+validates_length_of
+validates_numericality_of
+validates_primitive_type_of
+validates_presence_of
+validates_uniqueness_of
+validates_within
+
+validates_with_method
+        </pre>
+      </article>
+
+      <article>
+        <h1>
+          Ready?
+          <br>
+          Let's swing...
+        </h1>
+      </article>
+    </section>
+
+  </body>
+</html>
